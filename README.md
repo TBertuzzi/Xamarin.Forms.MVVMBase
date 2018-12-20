@@ -87,3 +87,15 @@ await NavigationService.NavigateToAsync<DetalhesViewModel>(parameter);
 ```
 
 ## Dialog
+
+Use BaseViewModel DialogService to display custom alerts or an actionsheet.
+
+
+```csharp
+ //Alert
+ DialogService.AlertAsync("Title", "Message", "Cancel Button Label");
+ //Dialog
+ DialogService.AlertAsync("Title", "Message", "Accept Button Label", "Cancel Button Label");
+ //ActionSheet
+ DialogService.ActionSheetAsync("Title", "Message", "Destruction Button Labe", buttons);
+```
