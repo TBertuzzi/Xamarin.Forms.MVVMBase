@@ -54,5 +54,28 @@ To register the View Matching ViewModel, use:
 ViewModelLocator.Current.RegisterForNavigation <View, ViewModel> ();
 ```
 
+## Base ViewModel
+
+BaseViewModel is based on all ViewModels. BaseViewModel Implements LoadAsync in addition to Navigation and Dialog Service
+
+
+```csharp
+ public class MainViewModel : BaseViewModel
+    {
+       //Set Title
+        public MainViewModel() : base("Main View")
+        {
+        }
+
+        //Override Load
+        public override async Task LoadAsync(object navigationData)
+        {
+           
+        }
+    }
+```
+
+BaseViewModel already behind the implementations of Title and isBusy by default to use in all views
+
 ## Navigation
 
