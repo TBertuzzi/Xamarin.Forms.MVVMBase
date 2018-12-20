@@ -97,5 +97,14 @@ Use BaseViewModel DialogService to display custom alerts or an actionsheet.
  //Dialog
  await DialogService.AlertAsync("Title", "Message", "Accept Button Label", "Cancel Button Label");
  //ActionSheet
- await DialogService.ActionSheetAsync("Title", "Message", "Destruction Button Labe", buttons);
+ await DialogService.ActionSheetAsync("Title", "Message", "Destruction Button Label", buttons);
 ```
+
+## Dependency Injection
+
+Xamarin.Forms.MVVMBase uses DryIoc. You can use your container in the app.cs with :
+
+```csharp
+ ViewModelLocator.Current.ContainerBuilder.Register <Interface, Implementation> ();
+```
+
