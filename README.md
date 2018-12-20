@@ -79,3 +79,11 @@ BaseViewModel already behind the implementations of Title and isBusy by default 
 
 ## Navigation
 
+Use BaseViewModel NavigationService to navigate between them. You can also send parameters that will be received in LoadAsync.
+
+```csharp
+await NavigationService.NavigateToAsync<DetalhesViewModel>();
+await NavigationService.NavigateToAsync<DetalhesViewModel>(parameter);
+```
+
+## Dialog
