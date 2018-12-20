@@ -14,4 +14,45 @@ Simple MVVM framework for Xamarin.Forms projects
 
 Xamarin.Forms.MVVMBase is a .NET Standard 2.0 library.Its only dependency is the Xamarin.Forms
 
-Samples coming soon ..
+## Initialize
+
+App.cs :
+
+```csharp
+
+ public partial class App : Application
+    {
+        public App()
+        {
+            InitializeComponent();
+            BuildDependencies();
+            InitNavigation();
+        }
+
+        public void BuildDependencies()
+        {
+            ViewModelLocator.Current.RegisterForNavigation<MainPage, MainViewModel>();
+        }
+
+        async void InitNavigation()
+        {
+            var navigationService = ViewModelLocator.Current.Resolve<INavigationService>();
+            await navigationService.InitializeAsync<MainViewModel>(null, true);
+        }
+    }
+```
+
+Determines which Initial ViewModel of your app :
+
+```csharp
+InitializeAsync<MainViewModel>(null, true)
+```
+
+To register the View Matching ViewModel, use:
+
+```csharp
+ViewModelLocator.Current.RegisterForNavigation <View, ViewModel> ();
+```
+
+## Navigation
+
