@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -19,8 +20,8 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
 
         }
 
-        public async Task InitializeAsync<TViewModel>(object parameter = null,bool navigationPage = false) where TViewModel : BaseViewModel
-        => await InternalInitAsync(typeof(TViewModel), parameter, navigationPage);
+        public async Task InitializeAsync<TViewModel>(object parameter = null,bool navigationPage = false, NavigationPage customNavigationPage = null) where TViewModel : BaseViewModel
+        => await InternalInitAsync(typeof(TViewModel), parameter, navigationPage, customNavigationPage);
 
         public Task NavigateToAsync<TViewModel>() where TViewModel : BaseViewModel
             => InternalNavigateToAsync(typeof(TViewModel), null);
@@ -97,20 +98,27 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             await (page.BindingContext as BaseViewModel).LoadAsync(parameter);
         }
 
-        async Task InternalInitAsync(Type viewModelType, object parameter, bool navigationPage = false)
+        async Task InternalInitAsync(Type viewModelType, object parameter, bool navigationPage = false, NavigationPage customNavigationPage = null)
         {
             Page page = CreateAndBindPage(viewModelType, parameter);
 
-            var currentNavigationPage = CurrentApplication.MainPage as NavigationPage;
-
-            if (currentNavigationPage != null)
+            if (CurrentApplication.MainPage is NavigationPage currentNavigationPage)
             {
                 await currentNavigationPage.PushAsync(page);
             }
             else
             {
                 if (navigationPage)
-                    CurrentApplication.MainPage = new NavigationPage(page);
+                {
+                    if(customNavigationPage != null)
+                    {
+                        CurrentApplication.MainPage = (NavigationPage)Activator.CreateInstance(customNavigationPage.GetType(), page);
+                    }
+                    else
+                    {
+                        CurrentApplication.MainPage = new NavigationPage(page);
+                    }
+                }
                 else
                     CurrentApplication.MainPage = page;
 
@@ -142,8 +150,15 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             }
 
             Page page = Activator.CreateInstance(pageType) as Page;
-            BaseViewModel viewModel = ViewModelLocator.Current.Resolve(viewModelType) as BaseViewModel;
-            page.BindingContext = viewModel;
+            try
+            {
+                BaseViewModel viewModel = ViewModelLocator.Current.Resolve(viewModelType) as BaseViewModel;
+                page.BindingContext = viewModel;
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"CreateAndBindPage error: {ex.Message}");
+            }
 
             return page;
         }

@@ -7,7 +7,7 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
 {
     public interface INavigationService
     {
-        Task InitializeAsync<TViewModel>(object parameter = null,bool navigationPage = false) where TViewModel : BaseViewModel;
+        Task InitializeAsync<TViewModel>(object parameter = null,bool navigationPage = false, NavigationPage customNavigationPage = null) where TViewModel : BaseViewModel;
         Task NavigateToAsync<TViewModel>() where TViewModel : BaseViewModel;
         Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : BaseViewModel;
         Task NavigateToAsync(Type viewModelType);
