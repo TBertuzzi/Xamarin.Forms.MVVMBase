@@ -20,39 +20,58 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
 
         }
 
-        public async Task InitializeAsync<TViewModel>(object parameter = null,bool navigationPage = false, NavigationPage customNavigationPage = null) where TViewModel : BaseViewModel
-        => await InternalInitAsync(typeof(TViewModel), parameter, navigationPage, customNavigationPage);
+        public async Task InitializeAsync<TViewModel>(NavigationParameters parameters = null,bool navigationPage = false, NavigationPage customNavigationPage = null) where TViewModel : BaseViewModel
+        => await InternalInitAsync(typeof(TViewModel), parameters, navigationPage, customNavigationPage);
 
         public Task NavigateToAsync<TViewModel>() where TViewModel : BaseViewModel
             => InternalNavigateToAsync(typeof(TViewModel), null);
 
-        public Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : BaseViewModel
-            => InternalNavigateToAsync(typeof(TViewModel), parameter);
+        public Task NavigateToAsync<TViewModel>(NavigationParameters parameters) where TViewModel : BaseViewModel
+            => InternalNavigateToAsync(typeof(TViewModel), parameters);
 
         public Task NavigateToAsync(Type viewModelType)
             => InternalNavigateToAsync(viewModelType, null);
 
-        public Task NavigateToAsync(Type viewModelType, object parameter)
-            => InternalNavigateToAsync(viewModelType, parameter);
+        public Task NavigateToAsync(Type viewModelType, NavigationParameters parameters)
+            => InternalNavigateToAsync(viewModelType, parameters);
 
-        public async Task NavigateBackAsync()
+        public async Task NavigateBackAsync(NavigationParameters parameters = null)
         {
             if (CurrentApplication.MainPage != null)
             {
-                await CurrentApplication.MainPage.Navigation.PopAsync();
+                // await CurrentApplication.MainPage.Navigation.PopAsync();
+
+                Xamarin.Forms.Page page;
+                if (CurrentApplication.MainPage.Navigation.ModalStack.Count > 0)
+                    page = await CurrentApplication.MainPage.Navigation.PopModalAsync();
+                else
+                    page = await CurrentApplication.MainPage.Navigation.PopAsync();
+
+                if (parameters == null)
+                {
+                    parameters = new NavigationParameters();
+                }
+
+                parameters.NavigationState = NavigationState.Backward;
+
+                //  page.AddNavigationArgs(parameter);
+                var viewmodel = page.BindingContext as BaseViewModel;
+                if (viewmodel != null)
+                    await viewmodel.OnNavigate(parameters);
+
             }
         }
 
-        public async Task NavigateAndClearBackStackAsync<TViewModel>(object parameter = null) where TViewModel : BaseViewModel
+        public async Task NavigateAndClearBackStackAsync<TViewModel>(NavigationParameters parameters = null) where TViewModel : BaseViewModel
         {
             try
             {
-                Page page = CreateAndBindPage(typeof(TViewModel), parameter);
+                Xamarin.Forms.Page page = CreateAndBindPage(typeof(TViewModel), parameters);
                 var navigationPage = CurrentApplication.MainPage as NavigationPage;
 
                 await navigationPage.PushAsync(page);
 
-                await (page.BindingContext as BaseViewModel).LoadAsync(parameter);
+                await (page.BindingContext as BaseViewModel).LoadAsync(parameters);
 
                 if (navigationPage != null && navigationPage.Navigation.NavigationStack.Count > 0)
                 {
@@ -76,9 +95,9 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             throw new NotImplementedException();
         }
 
-        async Task InternalNavigateToAsync(Type viewModelType, object parameter, bool modal = false)
+        async Task InternalNavigateToAsync(Type viewModelType, NavigationParameters parameters, bool modal = false)
         {
-            Page page = CreateAndBindPage(viewModelType, parameter);
+             Xamarin.Forms.Page page = CreateAndBindPage(viewModelType, parameters);
 
             var currentNavigationPage = CurrentApplication.MainPage as NavigationPage;
 
@@ -95,12 +114,23 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
                 CurrentApplication.MainPage = new NavigationPage(page);
             }
 
-            await (page.BindingContext as BaseViewModel).LoadAsync(parameter);
+            //if (parameters == null)
+            //{
+            //    parameters = new NavigationParameters();
+            //}
+
+            //parameters.NavigationState = NavigationState.Forward;
+
+            //await (page.BindingContext as BaseViewModel).LoadAsync(parameters);
+
+            //await (page.BindingContext as BaseViewModel).OnNavigate(parameters);
+
+            await ParameterNavigation(page, parameters, NavigationState.Forward);
         }
 
-        async Task InternalInitAsync(Type viewModelType, object parameter, bool navigationPage = false, NavigationPage customNavigationPage = null)
+        async Task InternalInitAsync(Type viewModelType, NavigationParameters parameters, bool navigationPage = false, NavigationPage customNavigationPage = null)
         {
-            Page page = CreateAndBindPage(viewModelType, parameter);
+            Xamarin.Forms.Page page = CreateAndBindPage(viewModelType, parameters);
 
             if (CurrentApplication.MainPage is NavigationPage currentNavigationPage)
             {
@@ -124,7 +154,18 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
 
             }
 
-            await (page.BindingContext as BaseViewModel).LoadAsync(parameter);
+            //if (parameters == null)
+            //{
+            //    parameters = new NavigationParameters();
+            //}
+
+            //parameters.NavigationState = NavigationState.Init;
+
+            //await (page.BindingContext as BaseViewModel).LoadAsync(parameters);
+
+            //await (page.BindingContext as BaseViewModel).OnNavigate(parameters);
+
+            await ParameterNavigation(page, parameters, NavigationState.Init);
 
         }
 
@@ -140,7 +181,7 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             return ViewModelLocator.Current.Mappings[viewModelType];
         }
 
-        Page CreateAndBindPage(Type viewModelType, object parameter)
+        Xamarin.Forms.Page CreateAndBindPage(Type viewModelType, NavigationParameters parameters)
         {
             Type pageType = GetPageTypeForViewModel(viewModelType);
 
@@ -149,7 +190,7 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
                 throw new Exception($"Mapping type for {viewModelType} is not a page");
             }
 
-            Page page = Activator.CreateInstance(pageType) as Page;
+            Xamarin.Forms.Page page = Activator.CreateInstance(pageType) as Xamarin.Forms.Page;
             try
             {
                 BaseViewModel viewModel = ViewModelLocator.Current.Resolve(viewModelType) as BaseViewModel;
@@ -161,6 +202,20 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             }
 
             return page;
+        }
+
+        async Task ParameterNavigation(Xamarin.Forms.Page page,NavigationParameters parameters, NavigationState state)
+        {
+            if (parameters == null)
+            {
+                parameters = new NavigationParameters();
+            }
+
+            parameters.NavigationState = NavigationState.Init;
+
+            await (page.BindingContext as BaseViewModel).LoadAsync(parameters);
+
+            await (page.BindingContext as BaseViewModel).OnNavigate(parameters);
         }
 
     }

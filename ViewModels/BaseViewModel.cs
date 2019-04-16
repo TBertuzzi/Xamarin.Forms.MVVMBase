@@ -58,7 +58,13 @@ namespace Xamarin.Forms.MVVMBase.ViewModels
             DialogService = ViewModelLocator.Current.Resolve<IDialogService>();
         }
 
-        public virtual Task LoadAsync(object navigationData) => Task.FromResult(false);
+        public virtual Task LoadAsync(NavigationParameters navigationData) => Task.FromResult(false);
+
+        public virtual Task OnNavigate(NavigationParameters navigationData) => Task.FromResult(false);
+
+        public virtual Task ResumeASync() => Task.FromResult(false);
+
+        public virtual void AppLinkRequestReceive(Uri uri) => Task.FromResult(false);
 
     }
 }

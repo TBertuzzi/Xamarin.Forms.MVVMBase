@@ -35,7 +35,7 @@ namespace Xamarin.Forms.MVVMBase.ViewModels
         public void Register<T>() where T : class => ContainerBuilder.Register<T>();
 
         public void RegisterForNavigation<TView, TViewModel>()
-            where TView : Page
+            where TView : Xamarin.Forms.Page
             where TViewModel : BaseViewModel
         {
             Mappings.Add(typeof(TViewModel), typeof(TView));

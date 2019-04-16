@@ -20,6 +20,9 @@
     <Folder Include="ViewModels\" />
     <Folder Include="Services\Navigation\" />
     <Folder Include="Services\Dialog\" />
+    <Folder Include="Behaviors\" />
+    <Folder Include="Services\Aware\" />
+    <Folder Include="Page\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DryIoc" Version="3.0.2" />
