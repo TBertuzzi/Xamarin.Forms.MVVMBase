@@ -8,7 +8,7 @@ Simple MVVM framework for Xamarin.Forms projects
 
 |Name|Info|
 | ------------------- | :------------------: |
-|Xamarin.Forms.MVVMBase|[![NuGet](https://img.shields.io/badge/nuget-1.0.0-blue.svg)](https://www.nuget.org/packages/Xamarin.Forms.MVVMBase/)|
+|Xamarin.Forms.MVVMBase|[![NuGet](https://buildstats.info/nuget/Xamarin.Forms.MVVMBase)](https://www.nuget.org/packages/Xamarin.Forms.MVVMBase/)|
 
 **Platform Support**
 
