@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -10,9 +10,10 @@
     <PackageProjectUrl>https://github.com/TBertuzzi/Xamarin.Forms.MVVMBase</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TBertuzzi/Xamarin.Forms.MVVMBase</RepositoryUrl>
     <PackageTags>xamarin xamarin.forms xamarin forms helpers mvvm mvvmbase base</PackageTags>
-    <PackageReleaseNotes>First Release</PackageReleaseNotes>
+    <PackageReleaseNotes>Add new navigation and navigation parameters</PackageReleaseNotes>
     <Description>Simple MVVM framework for Xamarin.Forms projects</Description>
     <PackageIconUrl>https://github.com/TBertuzzi/Xamarin.Forms.MVVMBase/blob/master/Resource/icon.png?raw=true</PackageIconUrl>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
