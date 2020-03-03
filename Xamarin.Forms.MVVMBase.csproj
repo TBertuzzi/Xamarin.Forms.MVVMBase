@@ -13,7 +13,7 @@
     <PackageReleaseNotes>Add new navigation and navigation parameters</PackageReleaseNotes>
     <Description>Simple MVVM framework for Xamarin.Forms projects</Description>
     <PackageIconUrl>https://github.com/TBertuzzi/Xamarin.Forms.MVVMBase/blob/master/Resource/icon.png?raw=true</PackageIconUrl>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DryIoc" Version="3.0.2" />
-    <PackageReference Include="Xamarin.Forms" Version="3.5.0.129452" />
+    <PackageReference Include="Xamarin.Forms" Version="4.3.0.908675" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Class1.cs" />

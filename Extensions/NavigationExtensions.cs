@@ -20,5 +20,10 @@ namespace Xamarin.Forms
         {
             arguments.Add(page, parameters);
         }
+
+        public static void RemoveNavigationArgs(this Page page)
+        {
+            arguments.Remove(page);
+        }
     }
 }

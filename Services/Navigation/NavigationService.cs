@@ -48,7 +48,14 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
 
                 parameters.NavigationState = NavigationState.Backward;
 
+                if (page.NavigationArgs() != null && page.NavigationArgs().Count > 0)
+                {
+                    page.RemoveNavigationArgs();
+                }
+
                 page.AddNavigationArgs(parameters);
+
+
                 var viewmodel = page.BindingContext as BaseViewModel;
                 if (viewmodel != null)
                     await viewmodel.OnNavigate(parameters);
