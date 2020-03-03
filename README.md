@@ -68,12 +68,13 @@ BaseViewModel is based on all ViewModels. BaseViewModel Implements LoadAsync in 
         }
 
         //Override Load
-        public override async Task LoadAsync(object navigationData)
+        public override async Task LoadAsync(NavigationParameters navigationData)
         {
            
         }
     }
 ```
+
 
 BaseViewModel already behind the implementations of Title and isBusy by default to use in all views
 
@@ -84,6 +85,29 @@ Use BaseViewModel NavigationService to navigate between them. You can also send 
 ```csharp
 await NavigationService.NavigateToAsync<DetalhesViewModel>();
 await NavigationService.NavigateToAsync<DetalhesViewModel>(parameter);
+```
+
+NavigationParameters can be used to send parameters to a View, both when navigating to a new one and returning to the previous one.
+
+```csharp
+  var parametros = new NavigationParameters();
+  parametros.Add("key", value);
+```
+navigationData also returns if it is a new navigation or return from some view. use NavigationState :
+
+```csharp
+ public enum NavigationState
+    {
+        Init, //Start App
+        Forward, //Navigation to next View
+        Backward // Return Navigation
+    }
+```
+In addition to object navigation you can also browse via queryString as if using a url :
+
+```csharp
+ NavigationParameters(string queryString)
+ 
 ```
 
 ## Dialog
@@ -98,6 +122,22 @@ Use BaseViewModel DialogService to display custom alerts or an actionsheet.
  await DialogService.AlertAsync("Title", "Message", "Accept Button Label", "Cancel Button Label");
  //ActionSheet
  await DialogService.ActionSheetAsync("Title", "Message", "Destruction Button Label", buttons);
+```
+
+## BasePage
+
+You can use BasePage instead of the standard ContentPage. BasePage automatically changes the title to that of BaseViewModel and also implements DeepLink
+
+```csharp
+ /<?xml version="1.0" encoding="utf-8"?>
+<base:BasePage   xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Xamarin.Forms.MVVMBase.Page;assembly=Xamarin.Forms.MVVMBase"
+             mc:Ignorable="d">
+
+</base:BasePage>
 ```
 
 ## Dependency Injection
