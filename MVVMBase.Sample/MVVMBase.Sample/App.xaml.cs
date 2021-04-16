@@ -1,4 +1,5 @@
 ﻿using System;
+using MVVMBase.Sample.Controls;
 using MVVMBase.Sample.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.MVVMBase.Services.Navigation;
@@ -16,6 +17,7 @@ namespace MVVMBase.Sample
             InitNavigation();
         }
 
+        //Service Build
         public void BuildDependencies()
         {
             ViewModelLocator.Current.RegisterForNavigation<MainPage, MainViewModel>();
@@ -24,7 +26,14 @@ namespace MVVMBase.Sample
         async void InitNavigation()
         {
             var navigationService = ViewModelLocator.Current.Resolve<INavigationService>();
-            await navigationService.InitializeAsync<MainViewModel>(null, true);
+
+            //Basic Startup
+            //await navigationService.InitializeAsync<MainViewModel>(null, true);
+
+            //Custom Navigation
+            await navigationService.InitializeAsync<MainViewModel>(null, true, new CustomNavigation());
+
+            //CustomNavigation
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.MVVMBase.Helpers;
 using Xamarin.Forms.MVVMBase.ViewModels;
 
 namespace Xamarin.Forms.MVVMBase.Services.Navigation
@@ -29,6 +30,12 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
 
         public Task NavigateToAsync(Type viewModelType, NavigationParameters parameters)
             => InternalNavigateToAsync(viewModelType, parameters);
+
+        public Task PushModalToAsync<TViewModel>() where TViewModel : BaseViewModel
+             => InternalNavigateToAsync(typeof(TViewModel), null, true);
+
+        public Task PushModalToAsync<TViewModel>(NavigationParameters parameters) where TViewModel : BaseViewModel
+          => InternalNavigateToAsync(typeof(TViewModel), parameters, true);
 
         public async Task NavigateBackAsync(NavigationParameters parameters = null)
         {
@@ -91,9 +98,114 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             }
         }
 
-        public virtual Task RemoveLastFromBackStackAsync()
+        public async Task NavigateParentBackAsync(NavigationParameters parameters = null)
         {
-            throw new NotImplementedException();
+            if (CurrentApplication.MainPage != null)
+            {
+
+                Xamarin.Forms.Page page;
+                if (CurrentApplication.MainPage.Navigation.ModalStack.Count > 0)
+                    page = await CurrentApplication.MainPage.Navigation.PopModalAsync();
+                else
+                    page = await CurrentApplication.MainPage.Navigation.PopAsync();
+
+                var parentpage = GetPreviousPage(page, CurrentApplication.MainPage.Navigation.NavigationStack);
+
+                if (parameters == null)
+                {
+                    parameters = new NavigationParameters();
+                }
+
+                parameters.NavigationState = NavigationState.Backward;
+
+                var viewmodel = parentpage.BindingContext as BaseViewModel;
+                if (viewmodel != null)
+                    await viewmodel.OnNavigate(parameters);
+
+            }
+        }
+
+        public static Xamarin.Forms.Page GetPreviousPage(Xamarin.Forms.Page currentPage, System.Collections.Generic.IReadOnlyList<Xamarin.Forms.Page> navStack)
+        {
+            Xamarin.Forms.Page previousPage = null;
+
+            int previousPageIndex = GetPreviusPageIndex(currentPage, navStack);
+            if (navStack.Count >= 0 && previousPageIndex >= 0)
+                previousPage = navStack[previousPageIndex];
+
+            return previousPage;
+        }
+
+        public static int GetPreviusPageIndex(Xamarin.Forms.Page currentPage, System.Collections.Generic.IReadOnlyList<Xamarin.Forms.Page> navStack)
+        {
+            int stackCount = navStack.Count;
+            for (int x = 0; x < stackCount; x++)
+            {
+                var view = navStack[x];
+                if (view == currentPage)
+                    return x;
+            }
+
+            return stackCount - 1;
+        }
+
+        public async Task NavigateUriAsync(Uri uri, bool clearBackStack, NavigationParameters parameters = null)
+        {
+            try
+            {
+
+                var segments = UriHelper.GetUriSegments(uri);
+                var nextSegment = segments.Dequeue();
+
+                Xamarin.Forms.Page page = await InternalNavigateUriAsync(nextSegment, segments, true, parameters);
+
+
+                if (parameters == null)
+                {
+                    parameters = new NavigationParameters();
+                }
+
+                parameters.NavigationState = NavigationState.Init;
+
+                var viewmodel = page.BindingContext as BaseViewModel;
+                if (viewmodel != null)
+                    await viewmodel.OnNavigate(parameters);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"NavigateUriAsync: {ex.Message}");
+            }
+        }
+
+        private async Task<Xamarin.Forms.Page> InternalNavigateUriAsync(string nextSegment, Queue<string> segments, bool firstPage,
+           NavigationParameters parameters = null)
+        {
+
+            Type viewmodel = ViewModelLocator.Current.Mappings.Where(x =>
+             x.Value.Name == nextSegment).FirstOrDefault().Key;
+
+            Xamarin.Forms.Page page = CreateAndBindPage(viewmodel, parameters);
+            var navigationPage = CurrentApplication.MainPage as NFlowNavigationPage;
+
+            var currentNavigationPage = CurrentApplication.MainPage as NFlowNavigationPage;
+
+            if (currentNavigationPage != null && !firstPage)
+            {
+                await navigationPage.PushAsync(page, false);
+            }
+            else
+            {
+                CurrentApplication.MainPage = new NFlowNavigationPage(page);
+            }
+
+            if (segments.Count != 0)
+            {
+                var next = segments.Dequeue();
+                return await InternalNavigateUriAsync(next, segments, false, parameters);
+            }
+            else
+                return page;
+
         }
 
         async Task InternalNavigateToAsync(Type viewModelType, NavigationParameters parameters, bool modal = false)

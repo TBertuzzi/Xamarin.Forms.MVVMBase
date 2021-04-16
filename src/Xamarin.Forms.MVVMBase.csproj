@@ -25,6 +25,7 @@
     <Folder Include="Services\Aware\" />
     <Folder Include="Page\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DryIoc" Version="3.0.2" />

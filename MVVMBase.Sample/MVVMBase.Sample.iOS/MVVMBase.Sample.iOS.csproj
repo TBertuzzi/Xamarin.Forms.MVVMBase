@@ -132,5 +132,9 @@
       <Project>{59C84DCB-3BC7-45C5-8EC5-F57453B3E0BF}</Project>
       <Name>MVVMBase.Sample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Xamarin.Forms.MVVMBase.csproj">
+      <Project>{A0AEB34B-5E70-4CA8-BA2D-73E429436996}</Project>
+      <Name>Xamarin.Forms.MVVMBase</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
