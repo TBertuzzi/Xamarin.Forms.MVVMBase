@@ -2,7 +2,7 @@
 
 Simple MVVM framework for Xamarin.Forms projects
 
-###### This is the component, works on iOS, Android and UWP.
+###### This is the component, works on iOS, Android.
 
 **NuGet**
 
@@ -145,6 +145,6 @@ You can use BasePage instead of the standard ContentPage. BasePage automatically
 Xamarin.Forms.MVVMBase uses DryIoc. You can use your container in the app.cs with :
 
 ```csharp
- ViewModelLocator.Current.ContainerBuilder.Register <Interface, Implementation> ();
+  ViewModelLocator.Current.Register<Interface, Implementation> ();
 ```
 

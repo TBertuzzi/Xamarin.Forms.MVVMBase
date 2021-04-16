@@ -1,6 +1,7 @@
 ﻿using System;
 using MVVMBase.Sample.Controls;
 using MVVMBase.Sample.Helpers;
+using MVVMBase.Sample.Services;
 using MVVMBase.Sample.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.MVVMBase.Services.Navigation;
@@ -28,6 +29,8 @@ namespace MVVMBase.Sample
         async void InitNavigation()
         {
             var navigationService = ViewModelLocator.Current.Resolve<INavigationService>();
+            ViewModelLocator.Current.Register<IPokemonService, PokemonService>();
+
 
             //Basic Startup
             //await navigationService.InitializeAsync<MainViewModel>(null, true);
