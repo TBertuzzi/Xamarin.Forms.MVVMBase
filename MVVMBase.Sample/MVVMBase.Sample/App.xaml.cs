@@ -1,5 +1,6 @@
 ﻿using System;
 using MVVMBase.Sample.Controls;
+using MVVMBase.Sample.Helpers;
 using MVVMBase.Sample.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.MVVMBase.Services.Navigation;
@@ -13,6 +14,7 @@ namespace MVVMBase.Sample
         public App()
         {
             InitializeComponent();
+            Constants.ApiURL = "https://pokeapi.co/api/v2";
             BuildDependencies();
             InitNavigation();
         }

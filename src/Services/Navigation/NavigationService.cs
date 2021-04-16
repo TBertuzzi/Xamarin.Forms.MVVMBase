@@ -185,9 +185,9 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
              x.Value.Name == nextSegment).FirstOrDefault().Key;
 
             Xamarin.Forms.Page page = CreateAndBindPage(viewmodel, parameters);
-            var navigationPage = CurrentApplication.MainPage as NFlowNavigationPage;
+            var navigationPage = CurrentApplication.MainPage as NavigationPage;
 
-            var currentNavigationPage = CurrentApplication.MainPage as NFlowNavigationPage;
+            var currentNavigationPage = CurrentApplication.MainPage as NavigationPage;
 
             if (currentNavigationPage != null && !firstPage)
             {
@@ -195,7 +195,7 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             }
             else
             {
-                CurrentApplication.MainPage = new NFlowNavigationPage(page);
+                CurrentApplication.MainPage = new NavigationPage(page);
             }
 
             if (segments.Count != 0)
