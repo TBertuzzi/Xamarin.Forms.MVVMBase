@@ -181,7 +181,7 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
            NavigationParameters parameters = null)
         {
 
-            Type viewmodel = ViewModelLocator.Current.Mappings.Where(x =>
+            Type viewmodel = Container.Current.Mappings.Where(x =>
              x.Value.Name == nextSegment).FirstOrDefault().Key;
 
             Xamarin.Forms.Page page = CreateAndBindPage(viewmodel, parameters);
@@ -264,12 +264,12 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
 
         Type GetPageTypeForViewModel(Type viewModelType)
         {
-            if (!ViewModelLocator.Current.Mappings.ContainsKey(viewModelType))
+            if (!Container.Current.Mappings.ContainsKey(viewModelType))
             {
                 throw new KeyNotFoundException($"No map for ${viewModelType} was found on navigation mappings");
             }
 
-            return ViewModelLocator.Current.Mappings[viewModelType];
+            return Container.Current.Mappings[viewModelType];
         }
 
         Xamarin.Forms.Page CreateAndBindPage(Type viewModelType, NavigationParameters parameters)
@@ -284,7 +284,7 @@ namespace Xamarin.Forms.MVVMBase.Services.Navigation
             Xamarin.Forms.Page page = Activator.CreateInstance(pageType) as Xamarin.Forms.Page;
             try
             {
-                BaseViewModel viewModel = ViewModelLocator.Current.Resolve(viewModelType) as BaseViewModel;
+                BaseViewModel viewModel = Container.Current.Resolve(viewModelType) as BaseViewModel;
                 page.BindingContext = viewModel;
             }
             catch(Exception ex)

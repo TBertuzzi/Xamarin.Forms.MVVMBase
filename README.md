@@ -12,7 +12,7 @@ Simple MVVM framework for Xamarin.Forms projects
 
 **Platform Support**
 
-Xamarin.Forms.MVVMBase is a .NET Standard 2.0 library.Its dependencies are Xamarin.Forms and DryIoc
+Xamarin.Forms.MVVMBase is a .NET Standard 2.0 library.Its dependencies are Xamarin.Forms and Microsoft Extensions for iOC
 
 ## Initialize
 

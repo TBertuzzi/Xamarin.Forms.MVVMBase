@@ -54,8 +54,8 @@ namespace Xamarin.Forms.MVVMBase.ViewModels
         public BaseViewModel(string title)
         {
             Title = title;
-            NavigationService = ViewModelLocator.Current.Resolve<INavigationService>();
-            DialogService = ViewModelLocator.Current.Resolve<IDialogService>();
+            NavigationService = Container.Current.Resolve<INavigationService>();
+            DialogService = Container.Current.Resolve<IDialogService>();
         }
 
         public virtual Task LoadAsync(NavigationParameters navigationData) => Task.FromResult(false);

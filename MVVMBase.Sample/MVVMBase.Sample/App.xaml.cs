@@ -1,12 +1,11 @@
-﻿using System;
-using MVVMBase.Sample.Controls;
+﻿using MVVMBase.Sample.Controls;
 using MVVMBase.Sample.Helpers;
-using MVVMBase.Sample.Services;
 using MVVMBase.Sample.ViewModels;
 using Xamarin.Forms;
+using Xamarin.Forms.MVVMBase;
 using Xamarin.Forms.MVVMBase.Services.Navigation;
-using Xamarin.Forms.MVVMBase.ViewModels;
-using Xamarin.Forms.Xaml;
+using Microsoft.Extensions.DependencyInjection;
+using MVVMBase.Sample.Services;
 
 namespace MVVMBase.Sample
 {
@@ -23,23 +22,23 @@ namespace MVVMBase.Sample
         //Service Build
         public void BuildDependencies()
         {
-            ViewModelLocator.Current.RegisterForNavigation<MainPage, MainViewModel>();
-            ViewModelLocator.Current.RegisterForNavigation<PokemonPage, PokemonViewModel>();
+            Container.Current.RegisterForNavigation<MainPage, MainViewModel>();
+            Container.Current.RegisterForNavigation<PokemonPage, PokemonViewModel>();
+
+            Container.Current.Services.AddTransient<IPokemonService, PokemonService>();
+
+            Container.Current.Setup();
         }
 
         async void InitNavigation()
         {
-            var navigationService = ViewModelLocator.Current.Resolve<INavigationService>();
-            ViewModelLocator.Current.Register<IPokemonService, PokemonService>();
-
-
+            var navigationService = Container.Current.Resolve<INavigationService>();
+           
             //Basic Startup
             //await navigationService.InitializeAsync<MainViewModel>(null, true);
 
             //Custom Navigation
             await navigationService.InitializeAsync<MainViewModel>(null, true, new CustomNavigation());
-
-            //CustomNavigation
         }
     }
 }
