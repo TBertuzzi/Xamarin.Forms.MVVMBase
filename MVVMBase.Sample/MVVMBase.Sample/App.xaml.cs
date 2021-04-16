@@ -1,5 +1,8 @@
 ﻿using System;
+using MVVMBase.Sample.ViewModels;
 using Xamarin.Forms;
+using Xamarin.Forms.MVVMBase.Services.Navigation;
+using Xamarin.Forms.MVVMBase.ViewModels;
 using Xamarin.Forms.Xaml;
 
 namespace MVVMBase.Sample
@@ -9,20 +12,19 @@ namespace MVVMBase.Sample
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            BuildDependencies();
+            InitNavigation();
         }
 
-        protected override void OnStart()
+        public void BuildDependencies()
         {
+            ViewModelLocator.Current.RegisterForNavigation<MainPage, MainViewModel>();
         }
 
-        protected override void OnSleep()
+        async void InitNavigation()
         {
-        }
-
-        protected override void OnResume()
-        {
+            var navigationService = ViewModelLocator.Current.Resolve<INavigationService>();
+            await navigationService.InitializeAsync<MainViewModel>(null, true);
         }
     }
 }
