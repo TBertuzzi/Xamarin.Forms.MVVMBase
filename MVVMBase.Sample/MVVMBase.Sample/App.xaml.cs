@@ -24,6 +24,7 @@ namespace MVVMBase.Sample
         public void BuildDependencies()
         {
             ViewModelLocator.Current.RegisterForNavigation<MainPage, MainViewModel>();
+            ViewModelLocator.Current.RegisterForNavigation<PokemonPage, PokemonViewModel>();
         }
 
         async void InitNavigation()

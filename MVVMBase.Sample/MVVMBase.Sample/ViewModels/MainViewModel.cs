@@ -2,9 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using MVVMBase.Sample.Helpers;
 using MVVMBase.Sample.Models;
 using MVVMBase.Sample.Services;
+using Xamarin.Forms;
 using Xamarin.Forms.MVVMBase.Services.Navigation;
 using Xamarin.Forms.MVVMBase.ViewModels;
 
@@ -14,6 +16,10 @@ namespace MVVMBase.Sample.ViewModels
     {
         public ObservableCollection<Pokemon> Pokemons { get; }
         IPokemonService _PokemonService;
+
+        private ICommand _itemTappedCommand;
+        public ICommand ItemTappedCommand => _itemTappedCommand ?? (_itemTappedCommand =
+            new Command<Pokemon>(async (pokemon) => await ItemTappedCommandExecute(pokemon), (pokemon) => !IsBusy));
 
         public MainViewModel(IPokemonService pokemonService) : base("Main View")
         {
@@ -46,6 +52,16 @@ namespace MVVMBase.Sample.ViewModels
                 IsBusy = false;
 
             }
+        }
+
+        //Using ItemTappedCommand to easy touch Listview and CollectionView Options
+        private async Task ItemTappedCommandExecute(Pokemon pokemon)
+        {
+            //add Parameters navigation
+            var parameters = new NavigationParameters();
+            parameters.Add("pokemon", pokemon);
+
+            await NavigationService.NavigateToAsync<PokemonViewModel>(parameters);
         }
     }
 }

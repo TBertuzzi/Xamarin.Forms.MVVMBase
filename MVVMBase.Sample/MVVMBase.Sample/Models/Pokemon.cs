@@ -17,6 +17,9 @@ namespace MVVMBase.Sample.Models
         [JsonProperty("sprites")]
         public Sprites Sprites { get; set; }
 
+        [JsonProperty("Description")]
+        public string Description { get; set; }
+
         public byte[] Image { get; set; }
 
         public byte[] ImageBack { get; set; }
