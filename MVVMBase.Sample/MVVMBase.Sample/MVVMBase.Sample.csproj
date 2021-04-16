@@ -14,6 +14,7 @@
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="HttpExtension" Version="2.1.0" />
+    <PackageReference Include="Xamarin.Forms.ConvertersPack" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Xamarin.Forms.MVVMBase.csproj" />

@@ -1,24 +1,80 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:c="clr-namespace:Xamarin.Forms.ConvertersPack;assembly=Xamarin.Forms.ConvertersPack" xmlns:b="clr-namespace:Xamarin.Forms.MVVMBase.Behaviors;assembly=Xamarin.Forms.MVVMBase"
              x:Class="MVVMBase.Sample.MainPage">
 
+   <ContentPage.Resources>
+        <ResourceDictionary>
+            <c:ImageFromByteArrayConverter x:Key="imageFileCvt" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <StackLayout>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
-        </Frame>
-        <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
-        <Label Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="30,0,30,0"/>
-        <Label FontSize="16" Padding="30,24,30,0">
-            <Label.FormattedText>
-                <FormattedString>
-                    <FormattedString.Spans>
-                        <Span Text="Learn more at "/>
-                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
-                    </FormattedString.Spans>
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
+       <ListView HasUnevenRows="true"
+              IsRefreshing = "{Binding IsBusy}"
+              ItemsSource="{Binding Pokemons}"
+             CachingStrategy="RecycleElement" >
+
+        <ListView.ItemTemplate>
+
+            <DataTemplate>
+
+                <ViewCell>
+                    <Grid Padding="20,30" RowDefinitions="auto, auto" ColumnDefinitions="auto, *,auto" >
+
+                        <Image
+                              HorizontalOptions="CenterAndExpand"
+                              VerticalOptions="CenterAndExpand"
+                            HeightRequest="120" 
+                            WidthRequest = "120"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.RowSpan ="2"
+                            Source="{Binding Image, Converter={StaticResource imageFileCvt}}" >
+                        </Image>
+
+
+                        <Label Grid.Row="0" 
+                                   Grid.Column="1"
+                                     FontSize="Medium"
+                                 HorizontalTextAlignment="Center"
+                                   Text="{Binding Id,StringFormat='#{0}'}"/>
+
+                        <Label Grid.Row="1"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Column="1"
+                                   Grid.RowSpan ="1"
+                                   Text="{Binding Name}"
+                                   FontSize="Large"
+                                   TextColor="#FF5525"/>
+
+                        
+                       <Image
+                              HorizontalOptions="CenterAndExpand"
+                              VerticalOptions="CenterAndExpand"
+                            HeightRequest="120" 
+                            WidthRequest = "120"
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Grid.RowSpan ="2"
+                            Source="{Binding ImageBack, Converter={StaticResource imageFileCvt}}" >
+                        </Image>
+
+
+                    </Grid>
+                </ViewCell>
+
+            </DataTemplate>
+
+        </ListView.ItemTemplate>
+        <ListView.Behaviors>
+               <b:SelectedItemBehavior Command="{Binding ItemTappedCommand}"/>
+        </ListView.Behaviors>
+
+    </ListView>
+
     </StackLayout>
+
 
 </ContentPage>
