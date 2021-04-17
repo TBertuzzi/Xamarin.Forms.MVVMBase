@@ -10,8 +10,8 @@ namespace Xamarin.Forms.MVVMBase
     public class Container
     {
 
-        public IServiceCollection Services { get; set; }
-        private static IServiceProvider _ServiceProvider { get; set; }
+        private IServiceCollection Services { get; set; }
+        private IServiceProvider _ServiceProvider { get; set; }
 
         internal Dictionary<Type, Type> Mappings;
 
@@ -28,6 +28,41 @@ namespace Xamarin.Forms.MVVMBase
             Mappings = new Dictionary<Type, Type>();
 
         }
+
+        public void Register<TInterface, TImplementation>(LifeTime lifeTime = LifeTime.Transient)
+            where TInterface : class
+            where TImplementation : class, TInterface
+        {
+           switch(lifeTime)
+            {
+                case LifeTime.Scoped:
+                    Services.AddScoped<TInterface, TImplementation>();
+                    break;
+                case LifeTime.Singleton:
+                    Services.AddSingleton<TInterface, TImplementation>();
+                    break;
+                case LifeTime.Transient:
+                    Services.AddTransient<TInterface, TImplementation>();
+                    break;
+            }
+        }
+
+        public void Register<T>(LifeTime lifeTime = LifeTime.Transient) where T : class
+        {
+            switch (lifeTime)
+            {
+                case LifeTime.Scoped:
+                    Services.AddScoped<T>();
+                    break;
+                case LifeTime.Singleton:
+                    Services.AddSingleton<T>();
+                    break;
+                case LifeTime.Transient:
+                    Services.AddTransient<T>();
+                    break;
+            }
+        }
+
 
         public T Resolve<T>() => _ServiceProvider.GetService<T>();
         public object Resolve(Type type) => _ServiceProvider.GetService(type);
@@ -50,4 +85,10 @@ namespace Xamarin.Forms.MVVMBase
 
     }
 
+    public enum LifeTime
+    {
+        Scoped,
+        Singleton,
+        Transient
+    }
 }

@@ -4,7 +4,6 @@ using MVVMBase.Sample.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.MVVMBase;
 using Xamarin.Forms.MVVMBase.Services.Navigation;
-using Microsoft.Extensions.DependencyInjection;
 using MVVMBase.Sample.Services;
 
 namespace MVVMBase.Sample
@@ -20,13 +19,14 @@ namespace MVVMBase.Sample
         }
 
         //Service Build
-        public void BuildDependencies()
+        private void BuildDependencies()
         {
             Container.Current.RegisterForNavigation<MainPage, MainViewModel>();
             Container.Current.RegisterForNavigation<PokemonPage, PokemonViewModel>();
 
-            Container.Current.Services.AddTransient<IPokemonService, PokemonService>();
+            Container.Current.Register<IPokemonService, PokemonService>(LifeTime.Singleton);
 
+            //Configure Container
             Container.Current.Setup();
         }
 
