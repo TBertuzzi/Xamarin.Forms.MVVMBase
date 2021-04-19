@@ -54,14 +54,30 @@ namespace MVVMBase.Sample.ViewModels
             }
         }
 
+        //Override OnNavigate
+        public override async Task OnNavigate(NavigationParameters navigationData)
+        {
+            if (navigationData.NavigationState == NavigationState.Backward)
+            {
+                //you can use the navigation to identify whether you have returned from a viewmodel
+            }
+
+            if (navigationData.NavigationState == NavigationState.Forward)
+            {
+                //you can use the navigation to identify whether you have navigated to a viewmodel
+            }
+        }
+
         //Using ItemTappedCommand to easy touch Listview and CollectionView Options
         private async Task ItemTappedCommandExecute(Pokemon pokemon)
         {
-            //add Parameters navigation
+            //add Parameters to navigation
             var parameters = new NavigationParameters();
             parameters.Add("pokemon", pokemon);
 
             await NavigationService.NavigateToAsync<PokemonViewModel>(parameters);
         }
+
+       
     }
 }

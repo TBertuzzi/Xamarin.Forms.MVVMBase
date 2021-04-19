@@ -56,5 +56,18 @@ namespace MVVMBase.Sample.ViewModels
             }
 
         }
+
+        public override async Task OnNavigate(NavigationParameters navigationData)
+        {
+            if (navigationData.NavigationState == NavigationState.Backward)
+            {
+                //you can use the navigation to identify whether you have returned from a viewmodel
+            }
+
+            if (navigationData.NavigationState == NavigationState.Forward)
+            {
+                //you can use the navigation to identify whether you have navigated to a viewmodel
+            }
+        }
     }
 }

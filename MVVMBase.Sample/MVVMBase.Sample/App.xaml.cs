@@ -5,6 +5,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.MVVMBase;
 using Xamarin.Forms.MVVMBase.Services.Navigation;
 using MVVMBase.Sample.Services;
+using Xamarin.Essentials;
+using System.IO;
 
 namespace MVVMBase.Sample
 {
@@ -24,6 +26,7 @@ namespace MVVMBase.Sample
             Container.Current.RegisterForNavigation<MainPage, MainViewModel>();
             Container.Current.RegisterForNavigation<PokemonPage, PokemonViewModel>();
 
+            //Register services for use
             Container.Current.Register<IPokemonService, PokemonService>(LifeTime.Singleton);
 
             //Configure Container

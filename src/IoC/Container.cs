@@ -10,7 +10,7 @@ namespace Xamarin.Forms.MVVMBase
     public class Container
     {
 
-        private IServiceCollection Services { get; set; }
+        private static IServiceCollection Services { get; set; }
         private IServiceProvider _ServiceProvider { get; set; }
 
         internal Dictionary<Type, Type> Mappings;
@@ -29,7 +29,7 @@ namespace Xamarin.Forms.MVVMBase
 
         }
 
-        public void Register<TInterface, TImplementation>(LifeTime lifeTime = LifeTime.Transient)
+        public void Register<TInterface, TImplementation>(LifeTime lifeTime)
             where TInterface : class
             where TImplementation : class, TInterface
         {
@@ -47,7 +47,7 @@ namespace Xamarin.Forms.MVVMBase
             }
         }
 
-        public void Register<T>(LifeTime lifeTime = LifeTime.Transient) where T : class
+        public void Register<T>(LifeTime lifeTime) where T : class
         {
             switch (lifeTime)
             {
@@ -76,6 +76,7 @@ namespace Xamarin.Forms.MVVMBase
 
             Services.AddTransient<TViewModel>();
         }
+
 
         public void Setup()
         {
