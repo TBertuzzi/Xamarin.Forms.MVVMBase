@@ -1,0 +1,66 @@
+name: Publish package on NuGet
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  job_1: 
+    name: MVVMBase Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: 'src/'
+      
+    - name: Build
+      run: dotnet build . --configuration Release --no-restore
+      working-directory: 'src/'
+      
+  job_2: 
+    name: MVVMBase release publish
+    needs: job_1
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+    
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: '5.x'
+    
+    - name: Fetch all repository
+      run: git fetch --unshallow
+
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.9.7
+      with:
+        useConfigFile: true
+
+    - name: Change version on csproj file
+      run: sed -i -e 's/PackageVersion>[0-9a-z.-]*</PackageVersion>'$GITVERSION_NUGETVERSION'</' src/Xamarin.Forms.MVVMBase.csproj
+
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: 'src/'
+      
+    - name: Build
+      run: dotnet build . --configuration Release --no-restore
+      working-directory: 'src/'
+      
+    - name: Publish NuGet
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+        PROJECT_FILE_PATH: src/Xamarin.Forms.MVVMBase.csproj
+        NUGET_KEY: ${{secrets.NUGET_TOKEN}}
+        VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
