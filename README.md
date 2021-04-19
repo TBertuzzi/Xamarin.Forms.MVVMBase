@@ -6,9 +6,9 @@ Simple MVVM framework for Xamarin.Forms projects
 
 **NuGet**
 
-|Name|Info|
-| ------------------- | :------------------: |
-|Xamarin.Forms.MVVMBase|[![NuGet](https://buildstats.info/nuget/Xamarin.Forms.MVVMBase)](https://www.nuget.org/packages/Xamarin.Forms.MVVMBase/)|
+| Name                   |                                                           Info                                                           |
+| ---------------------- | :----------------------------------------------------------------------------------------------------------------------: |
+| Xamarin.Forms.MVVMBase | [![NuGet](https://buildstats.info/nuget/Xamarin.Forms.MVVMBase)](https://www.nuget.org/packages/Xamarin.Forms.MVVMBase/) |
 
 **Platform Support**
 
@@ -31,12 +31,17 @@ App.cs :
 
         public void BuildDependencies()
         {
-            ViewModelLocator.Current.RegisterForNavigation<MainPage, MainViewModel>();
+           Container.Current.RegisterForNavigation<MainPage, MainViewModel>();
+
+            //Configure Container
+            Container.Current.Setup();
         }
 
         async void InitNavigation()
         {
-            var navigationService = ViewModelLocator.Current.Resolve<INavigationService>();
+               var navigationService = Container.Current.Resolve<INavigationService>();
+
+            //Basic Startup
             await navigationService.InitializeAsync<MainViewModel>(null, true);
         }
     }
@@ -51,13 +56,12 @@ InitializeAsync<MainViewModel>(null, true)
 To register the View Matching ViewModel, use:
 
 ```csharp
-ViewModelLocator.Current.RegisterForNavigation <View, ViewModel> ();
+Container.Current.RegisterForNavigation <View, ViewModel> ();
 ```
 
 ## Base ViewModel
 
 BaseViewModel is based on all ViewModels. BaseViewModel Implements LoadAsync in addition to Navigation and Dialog Service
-
 
 ```csharp
  public class MainViewModel : BaseViewModel
@@ -70,11 +74,24 @@ BaseViewModel is based on all ViewModels. BaseViewModel Implements LoadAsync in 
         //Override Load
         public override async Task LoadAsync(NavigationParameters navigationData)
         {
-           
+
+        }
+
+        //Override OnNavigate
+        public override async Task OnNavigate(NavigationParameters navigationData)
+        {
+            if (navigationData.NavigationState == NavigationState.Backward)
+            {
+                //you can use the navigation to identify whether you have returned from a viewmodel
+            }
+
+            if (navigationData.NavigationState == NavigationState.Forward)
+            {
+                //you can use the navigation to identify whether you have navigated to a viewmodel
+            }
         }
     }
 ```
-
 
 BaseViewModel already behind the implementations of Title and isBusy by default to use in all views
 
@@ -93,6 +110,7 @@ NavigationParameters can be used to send parameters to a View, both when navigat
   var parametros = new NavigationParameters();
   parametros.Add("key", value);
 ```
+
 navigationData also returns if it is a new navigation or return from some view. use NavigationState :
 
 ```csharp
@@ -103,17 +121,17 @@ navigationData also returns if it is a new navigation or return from some view. 
         Backward // Return Navigation
     }
 ```
+
 In addition to object navigation you can also browse via queryString as if using a url :
 
 ```csharp
  NavigationParameters(string queryString)
- 
+
 ```
 
 ## Dialog
 
 Use BaseViewModel DialogService to display custom alerts or an actionsheet.
-
 
 ```csharp
  //Alert
@@ -145,6 +163,18 @@ You can use BasePage instead of the standard ContentPage. BasePage automatically
 Xamarin.Forms.MVVMBase uses DryIoc. You can use your container in the app.cs with :
 
 ```csharp
-  ViewModelLocator.Current.Register<Interface, Implementation> ();
+  Container.Current.Register<Interface, Implementation> (LifeTime.Singleton);
 ```
 
+Use the lifetime for your IoC
+
+```csharp
+public enum LifeTime
+    {
+        Scoped,
+        Singleton,
+        Transient
+    }
+```
+
+## For full Sample [click here](https://github.com/TBertuzzi/Xamarin.Forms.MVVMBase/tree/master/MVVMBase.Sample)
