@@ -156,6 +156,9 @@ You can use BasePage instead of the standard ContentPage. BasePage automatically
              mc:Ignorable="d">
 
 </base:BasePage>
+
+ public void OnAppLinkRequestReceived(Uri uri)
+
 ```
 
 ## Dependency Injection
