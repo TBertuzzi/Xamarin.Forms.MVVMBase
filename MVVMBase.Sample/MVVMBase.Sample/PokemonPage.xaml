@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:c="clr-namespace:Xamarin.Forms.ConvertersPack;assembly=Xamarin.Forms.ConvertersPack"
+    x:Class="MVVMBase.Sample.PokemonPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <c:ImageFromByteArrayConverter x:Key="imageFileCvt" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+
+ 
+            <ScrollView>   
+                <Grid Padding="30,5,30,0" RowDefinitions="Auto, Auto, Auto, Auto">
+                    
+                    <Label Grid.Row="0" HorizontalTextAlignment="Start">
+                           <Label.FormattedText>
+                                <FormattedString>
+                                   <Span Text="Pokémon " FontSize="36" FontAttributes="Bold" />
+                                    <Span Text="{Binding Pokemon.Name}" FontSize="35"/> 
+                                </FormattedString>
+                            </Label.FormattedText>
+                    </Label>
+
+
+                     <Image  HeightRequest="365"
+                          
+                                   Source="{Binding Pokemon.Image, Converter={StaticResource imageFileCvt}}"
+                      />
+                   
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*, *, *">
+                        <Label Grid.Column="0" Text="{Binding Pokemon.Id,StringFormat='ID #{0}'}" FontSize="30" FontAttributes="Bold" />
+
+                        <StackLayout Grid.Column="1" HorizontalOptions="End" Orientation="Horizontal" VerticalOptions="Center">
+                            <Label Text="{Binding Pokemon.Height,StringFormat='Height {0} Kg'}"/>
+                        </StackLayout>
+
+                    </Grid>
+
+                    <StackLayout Grid.Row="3">
+                        <Label LineHeight="1.4" Text="{Binding Pokemon.Description}"/>
+                    </StackLayout>
+
+                </Grid>
+             </ScrollView>
+
+</ContentPage>
